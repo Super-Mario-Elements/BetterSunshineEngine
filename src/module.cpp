@@ -13,6 +13,7 @@
 #include "cstd/ctype.h"
 #include "cstd/stdlib.h"
 #include "debug.hxx"
+#include "fludd.hxx"
 #include "game.hxx"
 #include "libs/optional.hxx"
 #include "loading.hxx"
@@ -572,6 +573,10 @@ KURIBO_MODULE_BEGIN(BETTER_SMS_MODULE_NAME, BETTER_SMS_AUTHOR_NAME, BETTER_SMS_V
             BetterSMS::Objects::registerObjectGrabInteractor,
             "registerObjectGrabInteractor__Q29BetterSMS7ObjectsFUlPFP9THitActorP6TMario_v");
 #endif
+        /* FLUDD */
+        KURIBO_EXPORT_AS(
+            BetterSMS::Fludd::registerNozzle,
+            "registerNozzle__Q29BetterSMS5FluddFPCcPFP9TWaterGun_P11TNozzleBaseUlPUl");
 
         /* GAME */
         KURIBO_EXPORT_AS(BetterSMS::Game::addInitCallback,
@@ -605,7 +610,7 @@ KURIBO_MODULE_BEGIN(BETTER_SMS_MODULE_NAME, BETTER_SMS_AUTHOR_NAME, BETTER_SMS_V
                          "addInitCallback__Q29BetterSMS5StageFPFP12TMarDirector_v");
         KURIBO_EXPORT_AS(BetterSMS::Stage::addUpdateCallback,
                          "addUpdateCallback__Q29BetterSMS5StageFPFP12TMarDirector_v");
-        
+
         KURIBO_EXPORT_AS(
             BetterSMS::Stage::addDraw2DCallback,
             "addDraw2DCallback__Q29BetterSMS5StageFPFP12TMarDirectorPC13J2DOrthoGraph_v");
