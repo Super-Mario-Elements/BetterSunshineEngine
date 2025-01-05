@@ -65,6 +65,9 @@ static size_t sPlayerLoadAfterCBsSize = 0;
 static Player::UpdateCallback sPlayerUpdaters[128];
 static size_t sPlayerUpdatersSize = 0;
 
+static PhysicsMetaInfo<u32, Player::ReceiveMessageCallback> sPlayerMessageCBs[128];
+static size_t sPlayerMessageCBsSize = 0;
+
 static PhysicsMetaInfo<u32, Player::MachineCallback> sPlayerStateMachines[128];
 static size_t sPlayerStateMachinesSize = 0;
 
@@ -298,6 +301,11 @@ BETTER_SMS_FOR_EXPORT bool BetterSMS::Player::addLoadAfterCallback(LoadAfterCall
 
 BETTER_SMS_FOR_EXPORT bool BetterSMS::Player::addUpdateCallback(UpdateCallback process) {
     sPlayerUpdaters[sPlayerUpdatersSize++] = process;
+    return true;
+}
+
+BETTER_SMS_FOR_EXPORT bool BetterSMS::Player::addMessageCallback(u32 message, ReceiveMessageCallback process) {
+    sPlayerMessageCBs[sPlayerMessageCBsSize++] = {message, process};
     return true;
 }
 
@@ -689,8 +697,8 @@ static void initFludd(TMario *player, Player::TPlayerData *playerData) {
         }
     }
 
-    player->mFludd->mCurrentWater = player->mFludd->mNozzleList[(u8)player->mFludd->mCurrentNozzle]
-                                        ->mEmitParams.mAmountMax.get();
+    TNozzleBase *currentNozzle = player->mFludd->getCurrentNozzle();
+    player->mFludd->mCurrentWater = currentNozzle->mEmitParams.mAmountMax.get();
 }
 
 MActor *createMActorForModel(MActorAnmData *anmData, J3DModel *model, f32 configuredFramerate,
@@ -919,6 +927,22 @@ static void playerUpdateHandler(TMario *player, JDrama::TGraphics *graphics) {
     player->playerControl(graphics);
 }
 SMS_PATCH_BL(SMS_PORT_REGION(0x8024D3A0, 0x80245134, 0, 0), playerUpdateHandler);  // Mario
+
+bool playerReceiveMessage(TMario *player, THitActor *sender, u32 flags) {
+    bool handled = receiveMessage__7TMarioFP9THitActorUl(player, sender, flags);
+
+    u32 objId = sender->mObjectID;
+
+    for (auto &item : sPlayerMessageCBs) {
+        if (item.mID != objId) {
+            continue;
+        }
+        handled = handled || item.mCallback(player, sender, flags);
+    }
+    return handled;
+}
+SMS_WRITE_32(SMS_PORT_REGION(0x803aefc4, 0, 0, 0), &playerReceiveMessage);
+SMS_WRITE_32(SMS_PORT_REGION(0x803dd700, 0, 0, 0), &playerReceiveMessage);
 
 static void playerDrawHandler(TMario *player, JDrama::TGraphics *graphics) {
     auto *params = Player::getData(player);

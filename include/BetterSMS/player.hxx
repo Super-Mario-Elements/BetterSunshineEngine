@@ -59,6 +59,7 @@ namespace BetterSMS {
         typedef void (*InitCallback)(TMario *, bool);
         typedef void (*LoadAfterCallback)(TMario *);
         typedef void (*UpdateCallback)(TMario *, bool);
+        typedef bool (*ReceiveMessageCallback)(TMario *, THitActor *, u32);
         typedef bool (*MachineCallback)(TMario *);
         typedef void (*CollisionCallback)(TMario *, const TBGCheckData *, InteractionFlags_);
 
@@ -68,6 +69,8 @@ namespace BetterSMS {
         bool addLoadAfterCallback(LoadAfterCallback);
         // Add a function to call on player update
         bool addUpdateCallback(UpdateCallback);
+        // Add a function to call on player message
+        bool addMessageCallback(u32 id, ReceiveMessageCallback);
         // Register a function to call for a specific player state
         bool registerStateMachine(u32 state, MachineCallback);
         // Register a function to call for a specific collision type

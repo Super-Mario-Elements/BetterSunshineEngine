@@ -515,6 +515,8 @@ KURIBO_MODULE_BEGIN(BETTER_SMS_MODULE_NAME, BETTER_SMS_AUTHOR_NAME, BETTER_SMS_V
                          "addLoadAfterCallback__Q29BetterSMS6PlayerFPFP6TMario_v");
         KURIBO_EXPORT_AS(BetterSMS::Player::addUpdateCallback,
                          "addUpdateCallback__Q29BetterSMS6PlayerFPFP6TMariob_v");
+        KURIBO_EXPORT_AS(BetterSMS::Player::addMessageCallback,
+                         "addMessageCallback__Q29BetterSMS6PlayerFUlPFP6TMarioP9THitActorUl_b");
         KURIBO_EXPORT_AS(BetterSMS::Player::registerStateMachine,
                          "registerStateMachine__Q29BetterSMS6PlayerFUlPFP6TMario_b");
         KURIBO_EXPORT_AS(
@@ -603,6 +605,7 @@ KURIBO_MODULE_BEGIN(BETTER_SMS_MODULE_NAME, BETTER_SMS_AUTHOR_NAME, BETTER_SMS_V
                          "addInitCallback__Q29BetterSMS5StageFPFP12TMarDirector_v");
         KURIBO_EXPORT_AS(BetterSMS::Stage::addUpdateCallback,
                          "addUpdateCallback__Q29BetterSMS5StageFPFP12TMarDirector_v");
+        
         KURIBO_EXPORT_AS(
             BetterSMS::Stage::addDraw2DCallback,
             "addDraw2DCallback__Q29BetterSMS5StageFPFP12TMarDirectorPC13J2DOrthoGraph_v");

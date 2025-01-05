@@ -32,7 +32,7 @@ static u16 *sObjLoadAddrTable[sLoadAddrTableSize][2]{
     {(u16 *)SMS_PORT_REGION(0x801B1772, 0x801a962A, 0, 0),
      (u16 *)SMS_PORT_REGION(0x801B178A, 0x801a9642, 0, 0)},
     {(u16 *)SMS_PORT_REGION(0x801B1AF2, 0x801a99AA, 0, 0),
-     (u16 *)SMS_PORT_REGION(0x801B1AFA, 0x801A99B2, 0, 0)}
+     (u16 *)SMS_PORT_REGION(0x801B1AFA, 0x801A99B2, 0, 0)},
 };
 
 static ObjData *sObjDataTableNew[ObjDataTableSize + sObjMaxCount];
@@ -42,7 +42,8 @@ template <typename _I, typename _C> struct ObjectCallbackMeta {
     _C mCallback;
 };
 
-static TGlobalVector<ObjectCallbackMeta<const char *, Objects::NameRefInitializer>> sCustomMapObjList;
+static TGlobalVector<ObjectCallbackMeta<const char *, Objects::NameRefInitializer>>
+    sCustomMapObjList;
 static TGlobalVector<ObjectCallbackMeta<const char *, Objects::NameRefInitializer>>
     sCustomEnemyObjList;
 static TGlobalVector<ObjectCallbackMeta<const char *, Objects::NameRefInitializer>>
@@ -238,4 +239,59 @@ SMS_WRITE_32(SMS_PORT_REGION(0x80262404, 0x8025A190, 0, 0), 0x2C030000);
 
 void objects_staticResetter() {}
 
+void TMapObjBase_initActorData_override(TMapObjBase *that) {
+    if(that == nullptr) {
+        OSPanic(__FILE__, __LINE__, "Tried to init nullptr actor %X\n", (u32)that);
+    }
+
+    u16 code = JDrama::TNameRef::calcKeyCode(that->mRegisterName);
+
+    int idx = -1;
+    for (int i = 0; i < sObjMaxCount; ++i) {
+        if (sObjDataTableNew[i] == 0x0)
+            break;
+        const char *mdlName = sObjDataTableNew[i]->mMdlName;
+        if (mdlName == 0x0)
+            continue;
+        u16 otherCode       = JDrama::TNameRef::calcKeyCode(mdlName);
+        if (code == otherCode && strcmp(mdlName, that->mRegisterName) == 0) {
+            idx = i;
+            break;
+        }
+    }
+
+    if (idx == -1) {
+        OSPanic(__FILE__, __LINE__, "Could not find actor '%s' on initialize.\n", that->mRegisterName);
+    }
+
+    if (strcmp(that->mRegisterName, that->mKeyName) == 0) {
+        that->mKeyName = that->mRegisterName;
+    }
+
+    that->mObjData        = sObjDataTableNew[idx];
+    that->mModelLoadFlags = that->mObjData->mUnkFlags;
+
+    auto *nameref = TMarNameRefGen::getInstance()->getRootNameRef();
+    u16 keycode   = JDrama::TNameRef::calcKeyCode(that->mObjData->mLiveManagerName);
+    that->mLiveManager =
+        (TLiveManager *)nameref->searchF(keycode, that->mObjData->mLiveManagerName);
+    that->mLiveManager->manageActor(that);
+
+    auto *collisionInfo = that->mObjData->mObjCollisionData;
+    if(collisionInfo != nullptr) {
+        that->_03 = that->mScale.y * collisionInfo->_08;
+    }
+    that->mTranslation.y += that->_03;
+
+    that->mShadowRadius = that->mObjData->_30 * that->mScale.x;
+
+    if((that->mModelLoadFlags & 1) != 0) {
+        that->mStateFlags.asU32 = that->mStateFlags.asU32 & 0xfffffeff;
+    }
+
+    if((that->mModelLoadFlags & 0x100000) != 0) {
+        that->_E8 = 0x2;
+    }
+}
+SMS_PATCH_BL(SMS_PORT_REGION(0x801b1888, 0, 0, 0), TMapObjBase_initActorData_override);
 #endif
