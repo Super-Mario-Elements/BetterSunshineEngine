@@ -825,11 +825,11 @@ private:
 
 class AspectRatioSetting final : public Settings::IntSetting {
 public:
-    enum Kind { FULL, FULLOPENMATTE, WIDE, ULTRAWIDE };
+    enum Kind { FULL, FULLOPENMATTE, STEAMDECK, WIDE, ULTRAWIDE, STUPIDWIDE };
 
     AspectRatioSetting(const char *name)
         : IntSetting(name, &mAspectRatioValue), mAspectRatioValue(FULL) {
-        mValueRange = {0, 2, 1};
+        mValueRange = {0, 5, 1};
     }
     ~AspectRatioSetting() override {}
 
@@ -842,11 +842,17 @@ public:
         case Kind::FULLOPENMATTE:
             strncpy(dst, "4:3 (OPEN MATTE)", 17);
             break;
+        case Kind::STEAMDECK:
+            strncpy(dst, "16:10", 6);
+            break;
         case Kind::WIDE:
             strncpy(dst, "16:9", 5);
             break;
         case Kind::ULTRAWIDE:
             strncpy(dst, "21:9", 5);
+            break;
+        case Kind::STUPIDWIDE:
+            strncpy(dst, "32:9", 5);
             break;
         }
     }
@@ -914,7 +920,7 @@ private:
 class GammaSetting final : public Settings::FloatSetting {
 public:
     GammaSetting(const char *name) : FloatSetting(name, &mGammaValue), mGammaValue(1.0f) {
-        mValueRange     = {0.5f, 2.0f, 0.1f};
+        mValueRange = {0.5f, 2.0f, 0.1f};
     }
     ~GammaSetting() override {}
 
