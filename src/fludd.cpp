@@ -298,9 +298,10 @@ SMS_PATCH_B(SMS_PORT_REGION(0x80269be4, 0, 0, 0), TWaterGun_movement_override);
 void TWaterGun_perform_override(TWaterGun *that, u32 flags, JDrama::TGraphics *graphics) {
 
     if ((flags & 0x1) != 0) {
-        if (that->mFlags & 0x10) {
+        // TODO: Figure out this, uncommenting this will make water stuck at empty at some points. Not sure what removing it might break...
+        /*if ((that->mFlags & 0x10) != 0) {
             that->mCurrentWater = 0;
-        }
+        }*/
         that->movement();
     }
 
