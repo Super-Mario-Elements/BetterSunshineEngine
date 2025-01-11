@@ -290,7 +290,7 @@ void TWaterGun_movement_override(TWaterGun *that) {
             that->_1d00 = 0.0f;
         }
     }
-    currentNozzle->animation(0);
+    currentNozzle->animation(that->mCurrentNozzle);
 }
 SMS_PATCH_B(SMS_PORT_REGION(0x80269be4, 0, 0, 0), TWaterGun_movement_override);
 
