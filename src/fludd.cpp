@@ -118,7 +118,7 @@ Mtx *TWaterGun_getEmitMtx_override(TWaterGun *that, int numberOfStream) {
     if (!that->mMario->onYoshi()) {
         if (that->mCurrentNozzle == 3) {
             TYoshi *yoshi = that->mMario->mYoshi;
-            result        = yoshi->mActor->mModel->mJointArray;
+            result        = yoshi->mActor->mModel->mJointArray + yoshi->mJoint;
         } else if (numberOfStream < MAX_EMITTERS) {
             TNozzleBase *currentNozzle = TWaterGun_getCurrentNozzle_override(that);
             if (gNozzleNumberOfStreams[that->mCurrentNozzle] <= numberOfStream) {
@@ -133,7 +133,7 @@ Mtx *TWaterGun_getEmitMtx_override(TWaterGun *that, int numberOfStream) {
 
     } else {
         TYoshi *yoshi = that->mMario->mYoshi;
-        result        = yoshi->mActor->mModel->mJointArray;
+        result        = yoshi->mActor->mModel->mJointArray + yoshi->mJoint;
     }
 
     return result;
