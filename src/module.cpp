@@ -185,7 +185,8 @@ extern void printStreamInfo(TApplication *app, const J2DOrthoGraph *graph);
 
 // GRAPHICS
 extern void updateFPS(TMarDirector *);
-extern void updateGammaSetting(TApplication *);
+extern void resetGammaSetting(TApplication *);
+extern void updateGammaSetting(TMarDirector *);
 
 // LOADING SCREEN
 extern void initLoadingScreen();
@@ -373,7 +374,8 @@ static void initLib() {
 
     Stage::addInitCallback(updateFPS);
     Stage::addUpdateCallback(updateFPS);
-    Game::addLoopCallback(updateGammaSetting);
+    Stage::addExitCallback(resetGammaSetting);
+    Stage::addUpdateCallback(updateGammaSetting);
 
     // SETTINGS
     Game::addBootCallback(initUnlockedSettings);
