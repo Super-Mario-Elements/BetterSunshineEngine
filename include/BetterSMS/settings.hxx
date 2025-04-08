@@ -40,7 +40,6 @@ namespace BetterSMS {
 
 namespace BetterSMS {
 
-
     struct ModuleInfo;
 
     namespace Settings {
