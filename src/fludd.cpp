@@ -457,11 +457,12 @@ void TWaterGun_changeNozzle_override(TWaterGun *that, u32 nozzleType, bool reple
 }
 SMS_PATCH_B(SMS_PORT_REGION(0x8026a168, 0, 0, 0), TWaterGun_changeNozzle_override);
 
+#define startSAWI ((int (*)(...))0x800185F4)
+
 void TWatergun_emit_override(TWaterGun *that) {
     bool isOnYoshi       = that->mMario->onYoshi();
     bool hasHelmetCamera = that->mMario->mAttributes.mGainHelmetFlwCamera;
-    bool isInWater       = that->mMario->mAttributes.mIsShallowWater ||
-                     that->mMario->mAttributes.mIsWater;
+    bool isInWater       = that->mMario->mAttributes.mIsShallowWater || that->mMario->mAttributes.mIsWater;
     bool someTreshold = that->mGeometry3.z <= 0.0f;  // mGeometry3 is obviously wrong...
 
     Mtx *emitMtx     = that->getEmitMtx(0);
@@ -489,8 +490,9 @@ void TWatergun_emit_override(TWaterGun *that) {
                     return;
                 } else if (currentNozzleId == 0) {
                     if (gpMSound->gateCheck(0x24)) {
-                        MSoundSE::startSoundActorWithInfo(0x24, that->mEmitPos[0], nullptr, 0.0, 0,
-                                                          0, nullptr, 0, 4);
+
+                        startSAWI(0x24, that->mEmitPos, nullptr, 0, currentNozzle->_374, 0, nullptr, 0, 4);
+                        //0x24, u32 param_1,Vec *param_2,Vec *param_3,float param_4,ulong param_5, ulong param_6, JAISound **param_7, ulong param_8, uchar param_9
                     }
                 } else if (currentNozzleId == 3) {
                     return;
@@ -502,8 +504,7 @@ void TWatergun_emit_override(TWaterGun *that) {
                 } else if (currentNozzleId == 5) {
                     if (gpMSound->gateCheck(0x0)) {
                         u32 nozzleValue = (u32)currentNozzle->_378;
-                        MSoundSE::startSoundActorWithInfo(0x0, that->mEmitPos[0], nullptr, 0,
-                                                          nozzleValue, 0, nullptr, 0, 4);
+                        MSoundSE::startSoundActorWithInfo(0x0, that->mEmitPos[0], nullptr, 0, nozzleValue, 0, nullptr, 0, 4);
                     }
                 }
             }
