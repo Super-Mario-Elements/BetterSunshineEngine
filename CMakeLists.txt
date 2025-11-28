@@ -2,6 +2,20 @@ cmake_minimum_required(VERSION 3.8)
 
 project(BetterSunshineEngine VERSION 1.0)
 
+# Near the top of your CMakeLists.txt, before project()
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.env")
+    file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/.env" env_lines)
+    foreach(line ${env_lines})
+        # Skip empty lines and comments
+        if(line AND NOT line MATCHES "^#")
+            string(REGEX REPLACE "^([^=]+)=(.*)$" "\\1;\\2" env_var ${line})
+            list(GET env_var 0 env_name)
+            list(GET env_var 1 env_value)
+            set(ENV{${env_name}} ${env_value})
+        endif()
+    endforeach()
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 
 option(SMS_FIX_DOWNWARP "Changes OOB behavior so downwarping ceases" OFF)
@@ -154,3 +168,19 @@ unset(SMS_INCLUDE_UNDERWATER_FRUIT CACHE)
 unset(SMS_INCLUDE_SLOT_B_SUPPORT CACHE)
 unset(SMS_INCLUDE_SHADOW_MARIO_HEALTH CACHE)
 unset(SMS_INCLUDE_EXCEPTION_HANDLER CACHE)
+
+# Only run if SMS_DEV_PATH is set
+#if(DEFINED ENV{SMS_DEV_PATH})
+#    add_custom_command(
+#        TARGET ${PROJECT_NAME}.kxe
+#        COMMAND ${PROJECT_SOURCE_DIR}/tools/KuriboConverter.exe ARGS ${PROJECT_NAME} "$ENV{SMS_DEV_PATH}/azack/files/Kuribo!/Mods/${PROJECT_NAME}.kxe" ${PROJECT_SOURCE_DIR}/maps/${SMS_REGION}.map
+#    )
+#endif()
+
+# Only run if DOLPHIN_PATH is set
+#if(DEFINED ENV{DOLPHIN_PATH})
+#    add_custom_command(
+#        TARGET ${PROJECT_NAME}.kxe
+#        COMMAND "$ENV{DOLPHIN_PATH}/Dolphin.exe" ARGS --logger --debugger --exec "$ENV{SMS_DEV_PATH}/azack/sys/main.dol"
+#    )
+#endif()

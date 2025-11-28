@@ -2398,7 +2398,7 @@ void GXSetNumIndStages(u8 nstages) {
     __gx->dirtyState |= 0x0006;
 }
 
-void GXSetIndTexMatrix(u8 indtexmtx, f32 offset_mtx[2][3], s8 scale_exp) {
+void GXSetIndTexMtx(u8 indtexmtx, f32 offset_mtx[2][3], s8 scale_exp) {
     u32 ma, mb;
     u32 val, s, idx;
 

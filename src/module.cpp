@@ -456,7 +456,9 @@ KURIBO_MODULE_BEGIN(BETTER_SMS_MODULE_NAME, BETTER_SMS_AUTHOR_NAME, BETTER_SMS_V
                          "isFirstBoot__Q29BetterSMS11ApplicationFv");
         KURIBO_EXPORT_AS(BetterSMS::Application::showSettingsOnFirstBoot,
                          "showSettingsOnFirstBoot__Q29BetterSMS11ApplicationFb");
-
+        KURIBO_EXPORT_AS(BetterSMS::Application::setContextOnBoot,
+                         "setContextOnBoot__Q29BetterSMS11ApplicationFUc");
+        
         /* BMG */
         KURIBO_EXPORT_AS(
             BetterSMS::BMG::registerBMGCommandCallback,

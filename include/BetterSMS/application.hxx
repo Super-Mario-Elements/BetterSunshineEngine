@@ -18,6 +18,7 @@ namespace BetterSMS {
         // module save on the memory card.
         bool isFirstBoot();
         void showSettingsOnFirstBoot(bool show_on_boot);
+        void setContextOnBoot(u8 context);
 
     }  // namespace Application
 };     // namespace BetterSMS

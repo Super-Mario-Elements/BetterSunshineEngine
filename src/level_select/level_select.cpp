@@ -608,7 +608,7 @@ void LevelSelectScreen::genEpisodeText(AreaMenuInfo &menu, u8 normalStageID, u8 
                 const char *scenarioName =
                     (const char *)SMSGetMessageData__FPvUl(scenarioNameData, scenarioNameID);
                 SMS_ASSERT(scenarioName,
-                           "Missing scenario name for scenario ID %u (%X) [name ID %d (%X)]",
+                           "Missing scenario name for scenario ID %u (%X) [name ID %d (%X)]. Remember to update /common/2d/stagename.bmg and /common/2d/scenarioname.bmg!",
                            scenarioID, scenarioID, scenarioNameID, scenarioNameID);
                 snprintf(scenarioTextBuf, 100, "%s", scenarioName);
             } else {

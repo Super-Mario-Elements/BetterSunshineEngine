@@ -26,6 +26,7 @@ using namespace BetterSMS;
 static TGlobalVector<Application::ContextCallback> sContextCBs(256);
 static bool sIsAdditionalMovie  = false;
 static bool sShowSettingsOnBoot = false;
+static u8 sContextOnBoot = 0;
 static u8 sIntroArea = 15, sIntroEpisode = 0;
 
 extern FirstBootSetting gFirstBootSetting;
@@ -49,6 +50,10 @@ bool BetterSMS::Application::isFirstBoot() { return gFirstBootSetting.getBool();
 
 BETTER_SMS_FOR_EXPORT void BetterSMS::Application::showSettingsOnFirstBoot(bool show_on_boot) {
     sShowSettingsOnBoot = show_on_boot;
+}
+
+BETTER_SMS_FOR_EXPORT void BetterSMS::Application::setContextOnBoot(u8 context) {
+    sContextOnBoot = context;
 }
 
 BETTER_SMS_FOR_CALLBACK bool BetterAppContextGameBoot(TApplication *app) {
@@ -203,6 +208,9 @@ void BetterApplicationProcess(TApplication *app) {
                     delayContext = CONTEXT_DIRECT_SETTINGS_MENU;
                 }
 
+                if (sContextOnBoot != 0) {
+                    delayContext = sContextOnBoot;
+                }
                 // If external tools like Junior's Toolbox hijack the scene, we should permiss
                 // it.
                 if (!introSceneMatchesExpected) {
